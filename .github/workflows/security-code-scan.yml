@@ -32,24 +32,12 @@ jobs:
         shell: pwsh
         run: |
           # Remove specified projects from the solution
-          dotnet sln remove PersonalUtilities/PersonalUtilities.csproj
-          dotnet sln remove PersonalUtilities.Notifications/PersonalUtilities.Notifications.csproj
+          dotnet sln SCrawler.sln remove ../../MyUtilities/PersonalUtilities/PersonalUtilities.vbproj          
+          dotnet sln SCrawler.sln remove ../../MyUtilities/PersonalUtilities.Notifications/PersonalUtilities.Notifications.vbproj
       
           # Restore dependencies
           dotnet restore
-      
-          # Add required DLL references with 'Copy to output folder' option
-          $projectPath = "path/to/your/project.csproj"
-          $dlls = @(
-              "PersonalUtilities.dll",
-              "PersonalUtilities.Notifications.dll",
-              "Microsoft.Toolkit.Uwp.Notifications.dll",
-              "System.ValueTuple.dll"
-          )
-      
-          foreach ($dll in $dlls) {
-              dotnet add $projectPath reference $dll --copy-to-output
-          }
+    
       
           # Build the project
           dotnet build
