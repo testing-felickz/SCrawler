@@ -28,10 +28,32 @@ jobs:
       - name: Set up projects
         uses: security-code-scan/security-code-scan-add-action@v1.2
 
-      - name: Build
+      - name: build
+        shell: pwsh
         run: |
+          # Remove specified projects from the solution
+          dotnet sln remove PersonalUtilities/PersonalUtilities.csproj
+          dotnet sln remove PersonalUtilities.Notifications/PersonalUtilities.Notifications.csproj
+      
+          # Restore dependencies
           dotnet restore
+      
+          # Add required DLL references with 'Copy to output folder' option
+          $projectPath = "path/to/your/project.csproj"
+          $dlls = @(
+              "PersonalUtilities.dll",
+              "PersonalUtilities.Notifications.dll",
+              "Microsoft.Toolkit.Uwp.Notifications.dll",
+              "System.ValueTuple.dll"
+          )
+      
+          foreach ($dll in $dlls) {
+              dotnet add $projectPath reference $dll --copy-to-output
+          }
+      
+          # Build the project
           dotnet build
+        
         
       - name: Convert sarif for uploading to GitHub
         uses: security-code-scan/security-code-scan-results-action@v1
